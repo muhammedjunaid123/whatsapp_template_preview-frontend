@@ -1,1 +1,96 @@
-<p>create-template works!</p>
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-r from-indigo-500 to-blue-500 p-6">
+    <div class="w-full max-w-4xl bg-white rounded-lg shadow-lg p-8 transform transition-all hover:scale-105 hover:shadow-xl">
+      
+      <!-- Header -->
+      <h2 class="text-3xl font-semibold text-gray-800 text-center mb-6 animate__animated animate__fadeIn">
+        Compose & Preview Message
+      </h2>
+  
+      <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 gap-8">
+        
+        <!-- Left Side: Input Form -->
+        <div class="bg-white p-6 rounded-lg shadow-lg transform transition-all hover:scale-105 hover:shadow-xl">
+          <h3 class="text-2xl font-medium text-gray-700 mb-6 animate__animated animate__fadeInUp">
+            Compose Your Message
+          </h3>
+  
+          <!-- Title -->
+          <div class="mb-4 animate__animated animate__fadeInUp">
+            <label class="block text-sm font-medium text-gray-600 mb-2">Title (Optional)</label>
+            <input
+              [(ngModel)]="title"
+              type="text"
+              class="w-full p-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all duration-300 ease-in-out"
+              placeholder="Enter title..."
+            />
+          </div>
+  
+          <!-- Message -->
+          <div class="mb-4 animate__animated animate__fadeInUp">
+            <label class="block text-sm font-medium text-gray-600 mb-2">Message</label>
+            <textarea
+              [(ngModel)]="description"
+              rows="6"
+              class="w-full p-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all duration-300 ease-in-out"
+              placeholder="Enter your message here..."
+            ></textarea>
+          </div>
+  
+          <!-- Footer -->
+          <div class="mb-4 animate__animated animate__fadeInUp">
+            <label class="block text-sm font-medium text-gray-600 mb-2">Footer (Optional)</label>
+            <input
+              [(ngModel)]="footer"
+              type="text"
+              class="w-full p-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all duration-300 ease-in-out"
+              placeholder="Add footer..."
+            />
+          </div>
+  
+          <!-- Reset Button -->
+          <button
+            (click)="resetForm()"
+            class="w-full py-2 bg-indigo-500 text-white font-medium rounded-md hover:bg-indigo-600 transition-all duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          >
+            Reset Form
+          </button>
+        </div>
+  
+        <!-- Right Side: Message Preview -->
+        <div class="bg-white p-6 rounded-lg shadow-lg transform transition-all hover:scale-105 hover:shadow-xl">
+          <h3 class="text-2xl font-medium text-gray-700 mb-6 text-center animate__animated animate__fadeInUp">
+            Message Preview
+          </h3>
+  
+          <!-- Message Card -->
+          <div
+            *ngIf="description.trim().length > 0 || title.trim().length > 0 || footer.trim().length > 0; else placeholder"
+            class="bg-gradient-to-r from-blue-100 to-indigo-100 text-gray-800 p-6 rounded-md shadow-md space-y-4 max-h-96 overflow-auto transform transition-all hover:scale-105 hover:shadow-xl"
+          >
+            <!-- Title -->
+            <div *ngIf="title.trim().length > 0" class="text-lg font-semibold text-gray-800 animate__animated animate__fadeInUp">
+              {{ title }}
+            </div>
+  
+            <!-- Message -->
+            <p class="text-base text-gray-800 whitespace-pre-wrap animate__animated animate__fadeInUp">
+              {{ description }}
+            </p>
+  
+            <!-- Footer -->
+            <div *ngIf="footer.trim().length > 0" class="text-sm text-gray-500 mt-2 animate__animated animate__fadeInUp">
+              {{ footer }}
+            </div>
+          </div>
+  
+          <!-- Placeholder -->
+          <ng-template #placeholder>
+            <div class="text-gray-400 text-sm italic text-center bg-gray-100 p-4 rounded-md transform transition-all hover:scale-105 hover:shadow-xl">
+              Your message will appear here...
+            </div>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+  </div>
+  

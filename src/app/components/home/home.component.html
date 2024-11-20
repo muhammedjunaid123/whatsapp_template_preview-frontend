@@ -36,56 +36,25 @@
         </div>
       </div>
   
-      <!-- Responsive Template List -->
-      <div class="space-y-4 lg:hidden">
-        <div
-          *ngFor="let template of paginatedTemplates"
-          class="bg-white shadow-lg rounded-lg p-4 hover:shadow-xl transition-shadow duration-300">
-          <h2 class="text-lg font-semibold text-green-700">{{ template.title }}</h2>
-          <p class="text-gray-600 mt-2">{{ template.description }}</p>
-          <div class="mt-4 flex justify-between items-center">
-            <span class="text-sm text-gray-500">Updated: {{ template.updatedAt }}</span>
+      <!-- Template List -->
+      <div class="bg-white shadow-lg rounded-lg overflow-hidden">
+        <ul>
+          <li *ngFor="let template of paginatedTemplates" class="border-b border-gray-200 p-4 hover:bg-gray-50">
+            <h3 class="text-lg font-semibold" [innerHTML]="template.title"></h3>
+            <div class="text-sm text-gray-600">
+              <ng-container *ngIf="template.description">
+                <div [innerHTML]="template.description"></div>
+                <div class="font-thin text-xs" [innerHTML]="template.footer"></div>
+              </ng-container>
+            </div>
+            <p class="text-xs text-gray-400 mt-2">Updated: {{ template.updatedAt }}</p>
             <button
-              class="text-blue-500 hover:underline hover:scale-105 transition-transform duration-200"
+              class="mt-2 text-blue-500 hover:underline hover:scale-105 transition-transform duration-200"
               (click)="editTemplate(template.id)">
               Edit
             </button>
-          </div>
-        </div>
-      </div>
-  
-      <!-- Table for Larger Screens -->
-      <div class="hidden lg:block bg-white shadow-lg rounded-lg overflow-hidden">
-        <table class="w-full table-auto border-collapse border border-gray-200">
-          <thead class="bg-gray-100">
-            <tr>
-              <th class="py-3 px-4 border border-gray-200 text-left">
-                <button (click)="sortBy('title')" class="hover:underline">Title</button>
-              </th>
-              <th class="py-3 px-4 border border-gray-200 text-left">Description</th>
-              <th class="py-3 px-4 border border-gray-200 text-left">
-                <button (click)="sortBy('updatedAt')" class="hover:underline">Updated Date</button>
-              </th>
-              <th class="py-3 px-4 border border-gray-200 text-center">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr
-              *ngFor="let template of paginatedTemplates"
-              class="hover:bg-gray-50 transform transition-transform duration-200">
-              <td class="py-3 px-4 border border-gray-200">{{ template.title }}</td>
-              <td class="py-3 px-4 border border-gray-200">{{ template.description }}</td>
-              <td class="py-3 px-4 border border-gray-200">{{ template.updatedAt }}</td>
-              <td class="py-3 px-4 border border-gray-200 text-center">
-                <button
-                  class="text-blue-500 hover:underline hover:scale-105 transition-transform duration-200"
-                  (click)="editTemplate(template.id)">
-                  Edit
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+          </li>
+        </ul>
       </div>
   
       <!-- Pagination -->
@@ -103,6 +72,18 @@
           class="bg-gray-200 text-gray-600 px-3 py-1 rounded-lg hover:scale-105 hover:bg-gray-300 disabled:opacity-50 transition-transform duration-200">
           Next
         </button>
+      </div>
+  
+      <!-- Limited Time Only Footer Message -->
+      <div class="bg-gradient-to-r from-green-500 to-green-700 text-white py-4 mt-8">
+        <div class="max-w-6xl mx-auto px-6 text-center">
+          <p class="text-sm">Limited Time Only! Hurry up and grab your templates before the offer ends!</p>
+          <p class="text-sm mt-2">© 2024 [Your Company Name]. All rights reserved.</p>
+          <div class="mt-2">
+            <a href="#" class="text-sm text-gray-200 hover:text-white transition-all duration-200">Privacy Policy</a> |
+            <a href="#" class="text-sm text-gray-200 hover:text-white transition-all duration-200">Terms of Service</a>
+          </div>
+        </div>
       </div>
     </div>
   </div>
