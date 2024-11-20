@@ -31,5 +31,24 @@ export class CreateTemplateComponent {
     const now = new Date();
     this.currentTime = `${now.getHours()}:${now.getMinutes().toString().padStart(2, '0')}`;
   }
- 
+  formatText(inputText: string) {
+   
+    // Bold formatting: *text*
+    inputText = inputText.replace(/\*(.*?)\*/g, '<b>$1</b>');
+
+    // Italic formatting: _text_
+    inputText = inputText.replace(/_(.*?)_/g, '<i>$1</i>');
+
+    return inputText;
+  }
+
+  titlefunc(inputText: string) {
+    this.title = inputText
+  }
+  descriptionfunc(inputText: string) {
+    this.description = this.formatText(inputText)
+  }
+  footerfunc(inputText: string) {
+    this.footer = inputText
+  }
 }
