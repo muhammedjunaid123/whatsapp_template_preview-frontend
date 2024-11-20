@@ -68,17 +68,17 @@
             class="bg-gradient-to-r from-blue-100 to-indigo-100 text-gray-800 p-6 rounded-md shadow-md space-y-4 max-h-96 overflow-auto transform transition-all hover:scale-105 hover:shadow-xl"
           >
             <!-- Title -->
-            <div *ngIf="title.trim().length > 0" class="text-lg font-semibold text-gray-800 animate__animated animate__fadeInUp">
+            <div *ngIf="title.trim().length > 0" class="text-lg font-semibold text-gray-800 break-words overflow-hidden">
               {{ title }}
             </div>
   
             <!-- Message -->
-            <p class="text-base text-gray-800 whitespace-pre-wrap animate__animated animate__fadeInUp">
+            <p class="text-base text-gray-800 whitespace-pre-wrap  break-words overflow-hidden">
               {{ description }}
             </p>
   
             <!-- Footer -->
-            <div *ngIf="footer.trim().length > 0" class="text-sm text-gray-500 mt-2 animate__animated animate__fadeInUp">
+            <div *ngIf="footer.trim().length > 0" class="text-sm text-gray-500 mt-2 break-words overflow-hidden">
               {{ footer }}
             </div>
           </div>
