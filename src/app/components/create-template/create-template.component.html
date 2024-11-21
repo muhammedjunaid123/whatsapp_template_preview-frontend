@@ -1,43 +1,45 @@
 <div class="min-h-screen flex items-center justify-center bg-gradient-to-r from-indigo-500 to-blue-500 p-6">
-  <div
-    class="w-full max-w-4xl bg-white rounded-lg shadow-lg p-8 transform transition-all hover:scale-105 hover:shadow-xl">
+  <div class="w-full max-w-4xl bg-white rounded-lg shadow-lg p-8">
 
     <!-- Header -->
-    <h2 class="text-3xl font-semibold text-gray-800 text-center mb-6 animate__animated animate__fadeIn">
+    <h2 class="text-3xl font-semibold text-gray-800 text-center mb-6">
       Compose & Preview Message
     </h2>
 
     <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 gap-8">
 
       <!-- Left Side: Input Form -->
-      <div class="bg-white p-6 rounded-lg shadow-lg transform transition-all hover:scale-105 hover:shadow-xl">
-        <h3 class="text-2xl font-medium text-gray-700 mb-6 animate__animated animate__fadeInUp">
+      <div class="bg-white p-6 rounded-lg shadow-lg">
+        <h3 class="text-2xl font-medium text-gray-700 mb-6">
           Compose Your Message
         </h3>
 
         <!-- Title -->
-        <div class="mb-4 animate__animated animate__fadeInUp">
+        <div class="mb-4">
           <label class="block text-sm font-medium text-gray-600 mb-2">Title (Optional)</label>
           <input #titleval type="text"
-            class="w-full p-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all duration-300 ease-in-out"
-            placeholder="Enter title..." (keyup)="titlefunc(titleval.value)" />
+            class="w-full p-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            placeholder="Enter title..." (keyup)="titlefunc(titleval.value)" [maxLength]="50" />
+          <div class="text-sm text-gray-500 mt-1">{{ 50 - titleval.value.length }} characters remaining</div>
         </div>
 
         <!-- Message -->
-        <div class="mb-4 animate__animated animate__fadeInUp">
+        <div class="mb-4">
           <label class="block text-sm font-medium text-gray-600 mb-2">Message</label>
-          <textarea rows="6"  [(ngModel)]="description"
-            class="w-full p-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all duration-300 ease-in-out"
-            placeholder="Enter your message here..." (keyup)="descriptionfunc()"></textarea>
+          <textarea rows="6" [(ngModel)]="description"
+            class="w-full p-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            placeholder="Enter your message here..." (keyup)="descriptionfunc()" [maxLength]="500"></textarea>
+          <div class="text-sm text-gray-500 mt-1">{{ 500 - description.length }} characters remaining</div>
         </div>
+
         <!-- Formatting Buttons -->
         <div class="flex items-center gap-4 mt-4">
           <button (click)="bold()"
-            class="px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 font-medium transition-all">
+            class="px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 font-medium">
             <strong>B</strong>
           </button>
           <button (click)="italic()"
-            class="px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 font-medium italic transition-all">
+            class="px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 font-medium italic">
             <em>I</em>
           </button>
         </div>
@@ -49,57 +51,51 @@
           <!-- Editable Variables -->
           <div class="space-y-4">
             <div class="flex items-center gap-4 bg-gray-50 p-4 border border-gray-200 rounded-md shadow-sm">
-
               <!-- Static Key -->
               <span class="text-sm font-medium text-gray-700 bg-gray-100 px-3 py-1 rounded-md">{{ '{{1}}' }}</span>
 
               <!-- Editable Value -->
               <input
-                class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
+                class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 placeholder="Enter value..." value="" />
-
-              <!-- Remove Variable -->
-
             </div>
           </div>
-
-          <!-- Add Variable Button -->
-
         </div>
+
         <!-- Footer -->
-        <div class="mb-4 animate__animated animate__fadeInUp">
+        <div class="mb-4">
           <label class="block text-sm font-medium text-gray-600 mb-2">Footer (Optional)</label>
-          <input type="text" #footerval
-            class="w-full p-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all duration-300 ease-in-out"
+          <input type="text" #footerval [maxLength]="50"
+            class="w-full p-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
             placeholder="Add footer..." (keyup)="footerfunc(footerval.value)" />
+          <div class="text-sm text-gray-500 mt-1">{{ 50 - footerval.value.length }} characters remaining</div>
         </div>
 
         <!-- Reset Button -->
         <button (click)="resetForm()"
-          class="w-full py-2 bg-indigo-500 text-white font-medium rounded-md hover:bg-indigo-600 transition-all duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          class="w-full py-2 bg-indigo-500 text-white font-medium rounded-md hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500">
           Reset Form
         </button>
       </div>
 
       <!-- Right Side: Message Preview -->
-      <div class="bg-white p-6 rounded-lg shadow-lg transform transition-all hover:scale-105 hover:shadow-xl">
-        <h3 class="text-2xl font-medium text-gray-700 mb-6 text-center animate__animated animate__fadeInUp">
+      <div class="bg-white p-6 rounded-lg shadow-lg">
+        <h3 class="text-2xl font-medium text-gray-700 mb-6 text-center">
           Message Preview
         </h3>
 
         <!-- Message Card -->
         <div
           *ngIf="description.trim().length > 0 || title.trim().length > 0 || footer.trim().length > 0; else placeholder"
-          class="bg-gradient-to-r from-blue-100 to-indigo-100 text-gray-800 p-6 rounded-md shadow-md space-y-4 max-h-96 overflow-auto transform transition-all hover:scale-105 hover:shadow-xl">
+          class="bg-gradient-to-r from-blue-100 to-indigo-100 text-gray-800 p-6 rounded-md shadow-md space-y-4 max-h-96 overflow-auto">
           <!-- Title -->
           <div *ngIf="title.trim().length > 0" class="text-lg font-semibold text-gray-800 break-words overflow-hidden"
             [innerHTML]="title">
           </div>
 
           <!-- Message -->
-          <p class="text-base text-gray-800 whitespace-pre-wrap  break-words overflow-hidden"
+          <p class="text-base text-gray-800 whitespace-pre-wrap break-words overflow-hidden"
             [innerHTML]="descriptionshow">
-
           </p>
 
           <!-- Footer -->
@@ -111,7 +107,7 @@
         <!-- Placeholder -->
         <ng-template #placeholder>
           <div
-            class="text-gray-400 text-sm italic text-center bg-gray-100 p-4 rounded-md transform transition-all hover:scale-105 hover:shadow-xl">
+            class="text-gray-400 text-sm italic text-center bg-gray-100 p-4 rounded-md">
             Your message will appear here...
           </div>
         </ng-template>
