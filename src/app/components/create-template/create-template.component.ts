@@ -1,4 +1,4 @@
-import { Component, DestroyRef } from '@angular/core';
+import { Component, DestroyRef, input } from '@angular/core';
 
 @Component({
   selector: 'app-create-template',
@@ -11,7 +11,7 @@ export class CreateTemplateComponent {
   footer: string = '';
   descriptionshow: string = '';
   currentTime!: string;
-  Variables: any = {};
+  Variables: Record<string, string> = {};
   constructor() {
     this.updateTime();
     setInterval(() => this.updateTime(), 60000); // Update time every minute
@@ -61,17 +61,35 @@ export class CreateTemplateComponent {
 
     return inputText;
   }
+  escapeRegex(string: string) {
+    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }
+
+  formateVariables(value: string) {
+
+    this.descriptionshow = this.description
+    
+    for (let key in this.Variables) {
+      if (this.Variables[key]){
+        this.descriptionshow = this.descriptionshow.replace(new RegExp(this.escapeRegex(key), 'g'), this.Variables[key]);
+      }
+
+    }
+  }
 
   titlefunc(inputText: string) {
     this.title = inputText
   }
 
+  trackByFn(index: number, item: any): any {
+    return item.key;  // Use unique key for tracking
+  }
 
   descriptionfunc() {
     let pattern = /{{([^}]*)}}/g;
     let match;
     let indices = [];
-    this.Variables={}
+    this.Variables = {}
     while ((match = pattern.exec(this.description)) !== null) {
       indices.push(match.index);
     }
@@ -81,14 +99,10 @@ export class CreateTemplateComponent {
       while (true) {
         index++
         if (this.description[index] == '}') {
-          console.log(this.description[index]);
-
           c++
         }
         if (c == 2) {
           let key = this.description.slice(indices[i], index + 1)
-          console.log(key);
-
           if (!this.Variables[key]) {
             this.Variables[key] = ''
           }
