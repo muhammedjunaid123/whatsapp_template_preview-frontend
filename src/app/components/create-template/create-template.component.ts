@@ -11,7 +11,7 @@ export class CreateTemplateComponent {
   footer: string = '';
   descriptionshow: string = '';
   currentTime!: string;
-
+  Variables: any = {};
   constructor() {
     this.updateTime();
     setInterval(() => this.updateTime(), 60000); // Update time every minute
@@ -65,9 +65,44 @@ export class CreateTemplateComponent {
   titlefunc(inputText: string) {
     this.title = inputText
   }
+
+
   descriptionfunc() {
+    let pattern = /{{([^}]*)}}/g;
+    let match;
+    let indices = [];
+    this.Variables={}
+    while ((match = pattern.exec(this.description)) !== null) {
+      indices.push(match.index);
+    }
+    for (let i = 0; i < indices.length; i++) {
+      let c = 0
+      let index = indices[i] + 2
+      while (true) {
+        index++
+        if (this.description[index] == '}') {
+          console.log(this.description[index]);
+
+          c++
+        }
+        if (c == 2) {
+          let key = this.description.slice(indices[i], index + 1)
+          console.log(key);
+
+          if (!this.Variables[key]) {
+            this.Variables[key] = ''
+          }
+          break;
+        }
+        if (this.description.length < index) {
+          break
+        }
+      }
+    }
+
     this.descriptionshow = this.formatText(this.description)
   }
+
   footerfunc(inputText: string) {
     this.footer = inputText
   }
