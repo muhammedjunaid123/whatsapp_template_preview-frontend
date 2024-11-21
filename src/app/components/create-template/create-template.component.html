@@ -58,8 +58,9 @@
               <!-- Editable Value -->
               <input #Variableval
                 class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                placeholder="Enter value..." [(ngModel)]="Variables[key.key]" (keyup)="formateVariables(Variableval.value)" 
-                />
+                placeholder="Enter value..." [maxlength]="50" [(ngModel)]="Variables[key.key]"
+                (keyup)="formateVariables(Variableval.value)" />
+              <div class="text-sm text-gray-500 mt-1">{{ 50 - key.value.length}} characters remaining</div>
             </div>
           </div>
         </div>
