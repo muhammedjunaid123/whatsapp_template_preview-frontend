@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, DestroyRef } from '@angular/core';
 
 @Component({
   selector: 'app-create-template',
@@ -9,6 +9,7 @@ export class CreateTemplateComponent {
   title: string = '';
   description: string = '';
   footer: string = '';
+  descriptionshow: string = '';
   currentTime!: string;
 
   constructor() {
@@ -18,21 +19,32 @@ export class CreateTemplateComponent {
 
   // Reset all input fields
   resetForm() {
-    console.log(this.title.split(' '));
-    console.log(this.description.split(' '));
-
     this.title = '';
     this.description = '';
     this.footer = '';
-  }
 
+  }
+  bold() {
+    let selected: string[] = window.getSelection()?.toString().split('\n') || []
+    for (let i = 0; i < selected?.length; i++) {
+      this.description=this.description.replace(selected[i],`*${selected[i]}*`);  
+    }
+    this.descriptionfunc()
+  }
+  italic(){
+    let selected: string[] = window.getSelection()?.toString().split('\n') || []
+    for (let i = 0; i < selected?.length; i++) {
+      this.description=this.description.replace(selected[i],`_${selected[i]}_`);  
+    }
+    this.descriptionfunc()
+  }
   // Update timestamp
   updateTime() {
     const now = new Date();
     this.currentTime = `${now.getHours()}:${now.getMinutes().toString().padStart(2, '0')}`;
   }
   formatText(inputText: string) {
-   
+
     // Bold formatting: *text*
     inputText = inputText.replace(/\*(.*?)\*/g, '<b>$1</b>');
 
@@ -45,8 +57,8 @@ export class CreateTemplateComponent {
   titlefunc(inputText: string) {
     this.title = inputText
   }
-  descriptionfunc(inputText: string) {
-    this.description = this.formatText(inputText)
+  descriptionfunc() {
+    this.descriptionshow = this.formatText(this.description)
   }
   footerfunc(inputText: string) {
     this.footer = inputText
