@@ -26,15 +26,23 @@ export class CreateTemplateComponent {
   }
   bold() {
     let selected: string[] = window.getSelection()?.toString().split('\n') || []
+    if (selected[0] == '') {
+      return
+    }
     for (let i = 0; i < selected?.length; i++) {
-      this.description=this.description.replace(selected[i],`*${selected[i]}*`);  
+      let regex = new RegExp(selected[i], 'g')
+      this.description = this.description.replace(regex, `*${selected[i]}*`);
     }
     this.descriptionfunc()
   }
-  italic(){
+  italic() {
     let selected: string[] = window.getSelection()?.toString().split('\n') || []
+    if (selected[0] == '') {
+      return
+    }
     for (let i = 0; i < selected?.length; i++) {
-      this.description=this.description.replace(selected[i],`_${selected[i]}_`);  
+      let regex = new RegExp(selected[i], 'g')
+      this.description = this.description.replace(regex, `_${selected[i]}_`);
     }
     this.descriptionfunc()
   }
