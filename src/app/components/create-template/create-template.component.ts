@@ -1,4 +1,7 @@
 import { Component, DestroyRef, input } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
+import { TemplateService } from '../../services/template/template.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-create-template',
@@ -13,14 +16,11 @@ export class CreateTemplateComponent {
   currentTime!: string;
   Variables: Record<string, string> = {};
   buttons: Record<string, string> = {};
-  maxButtons = 3; // Maximum number of buttons allowed
-  buttonCounter = 0; // Counter to generate unique keys
-  constructor() {
-    this.updateTime();
-    setInterval(() => this.updateTime(), 60000); // Update time every minute
-  }
+  maxButtons = 3;
+  buttonCounter = 0;
+  constructor(private _toastr: ToastrService, private _templateService: TemplateService, private _router: Router) {
 
-  // Reset all input fields
+  }
   resetForm() {
     this.title = '';
     this.description = '';
@@ -28,19 +28,19 @@ export class CreateTemplateComponent {
 
   }
 
-  // Add a new button
+
   addButton(): void {
     if (Object.keys(this.buttons).length < this.maxButtons) {
       this.buttonCounter++;
-      this.buttons[this.buttonCounter] = ''; // Add new button with empty name
+      this.buttons[this.buttonCounter] = '';
     }
   }
   buttonlength(): number {
     return Object.keys(this.buttons).length
   }
-  // Remove a button
+
   removeButton(key: string): void {
-    delete this.buttons[key]; // Remove button by key
+    delete this.buttons[key];
   }
   bold() {
     let selected: string = window.getSelection()?.toString() || '';
@@ -48,20 +48,13 @@ export class CreateTemplateComponent {
       return;
     }
     const escapedSelected = this.escapeRegex(selected);
-
-    // Create a regex pattern that matches the exact selected text
     const regex = new RegExp(`(${escapedSelected})`, 'g');
-
-    // Wrap the selected text with markdown *bold* syntax
     this.description = this.description.replace(regex, (match) => {
-      // Check if the match already has bold syntax, if so, avoid double formatting
       if (!match.startsWith('*') || !match.endsWith('*')) {
         return `*${match}*`;
       }
       return match;
     });
-
-    // Trigger the function to update any related actions after modifying the description
     this.descriptionfunc();
   }
 
@@ -72,26 +65,16 @@ export class CreateTemplateComponent {
     }
     const escapedSelected = this.escapeRegex(selected);
 
-    // Create a regex pattern that matches the exact selected text
     const regex = new RegExp(`(${escapedSelected})`, 'g');
 
-    // Wrap the selected text with markdown _italic_ syntax
+
     this.description = this.description.replace(regex, (match) => {
-      // Check if the match already has italic syntax, if so, avoid double formatting
       if (!match.startsWith('_') || !match.endsWith('_')) {
         return `_${match}_`;
       }
       return match;
     });
-
-    // Trigger the function to update any related actions after modifying the description
     this.descriptionfunc();
-  }
-
-  // Update timestamp
-  updateTime() {
-    const now = new Date();
-    this.currentTime = `${now.getHours()}:${now.getMinutes().toString().padStart(2, '0')}`;
   }
   formatText(inputText: string) {
 
@@ -103,6 +86,7 @@ export class CreateTemplateComponent {
 
     return inputText;
   }
+
   escapeRegex(string: string) {
     return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   }
@@ -156,6 +140,9 @@ export class CreateTemplateComponent {
     }
     this.descriptionshow = this.formatText(this.description)
     for (let key in this.Variables) {
+      if (this.description.indexOf(key) == -1) {
+        delete this.Variables[key]
+      }
       if (this.Variables[key]) {
         this.descriptionshow = this.descriptionshow.replace(new RegExp(this.escapeRegex(key), 'g'), this.Variables[key]);
       }
@@ -165,5 +152,24 @@ export class CreateTemplateComponent {
 
   footerfunc(inputText: string) {
     this.footer = inputText
+  }
+  saveMessage() {
+    if (this.description.trim() == "") {
+      this._toastr.error('please enter your message', 'error')
+      return
+    }
+    const data = {
+      title: this.title,
+      description: this.description,
+      footer: this.footer,
+      buttons: this.buttons,
+      Variables: this.Variables
+    }
+    this._templateService.template_create(data).subscribe(({
+      next: (res: any) => {
+        this._toastr.success(res.message, 'successfully')
+        this._router.navigate(['home'])
+      }
+    }))
   }
 }

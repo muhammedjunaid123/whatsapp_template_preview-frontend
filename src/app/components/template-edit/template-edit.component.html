@@ -1,0 +1,158 @@
+<div class="min-h-screen flex items-center justify-center p-6">
+    <div class="w-full max-w-7xl bg-white rounded-lg shadow-lg p-4">
+  
+      <!-- Header -->
+      <h2 class="text-3xl font-semibold text-gray-800 text-center mb-6">
+        Compose & Preview Message
+      </h2>
+  
+      <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-8">
+  
+        <!-- Left Side: Input Form (3/5 width) -->
+        <div class="col-span-1 md:col-span-2 lg:col-span-3 p-6 rounded-lg shadow-lg overflow-auto">
+          <h3 class="text-2xl font-medium text-gray-700 mb-6">
+            Compose Your Message
+          </h3>
+  
+          <!-- Title -->
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-600 mb-2">Title (Optional)</label>
+            <input #titleval type="text" [value]="template['title']"
+              class="w-full p-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              placeholder="Enter title..." (keyup)="titlefunc(titleval.value)" [maxLength]="50" />
+            <div class="text-sm text-gray-500 mt-1">{{ 50 - titleval.value.length }} characters remaining</div>
+          </div>
+  
+          <!-- Message -->
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-600 mb-2">Message</label>
+            <textarea rows="6" [(ngModel)]="template['description']"
+              class="w-full p-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              placeholder="Enter your message here..." (keyup)="descriptionfunc()" [maxLength]="500"></textarea>
+            <div class="text-sm text-gray-500 mt-1">{{ 500 - template['description'].length }} characters remaining</div>
+          </div>
+  
+          <!-- Formatting Buttons -->
+          <div class="flex items-center gap-4 mt-4">
+            <button (click)="bold()" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 font-medium">
+              <strong>B</strong>
+            </button>
+            <button (click)="italic()"
+              class="px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 font-medium italic">
+              <em>I</em>
+            </button>
+          </div>
+  
+          <!-- Add Variable UI -->
+          <div class="mt-6">
+            <!-- Editable Variables -->
+            <div class="space-y-4" *ngIf="template['Variables']">
+              <h4 class="text-lg font-medium text-gray-700 mb-4">Variables</h4>
+              <div *ngFor="let key of template['Variables']|keyvalue; trackBy: trackByFn"
+                class="flex items-center gap-4 bg-gray-50 p-4 border border-gray-200 rounded-md shadow-sm">
+                <!-- Static Key -->
+                <span class="text-sm font-medium text-gray-700 bg-gray-100 px-3 py-1 rounded-md">{{key.key}}</span>
+  
+                <!-- Editable Value -->
+                <input #Variableval
+                  class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  placeholder="Enter value..." [maxlength]="50" [(ngModel)]="template['Variables'][key.key]"
+                  (keyup)="formateVariables()" />
+                <div class="text-sm text-gray-500 mt-1">{{ 50 - key.value.length}} characters remaining</div>
+              </div>
+            </div>
+          </div>
+  
+          <!-- Footer -->
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-600 mb-2">Footer (Optional)</label>
+            <input type="text" #footerval [maxLength]="50" [value]="template['footer']"
+              class="w-full p-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              placeholder="Add footer..." (keyup)="footerfunc(footerval.value)" />
+            <div class="text-sm text-gray-500 mt-1">{{ 50 - footerval.value.length }} characters remaining</div>
+          </div>
+  
+          <div class="mt-8">
+            <h3 class="text-2xl font-medium text-gray-700 mb-6 text-center">Manage Buttons</h3>
+  
+            <!-- Add Button Section -->
+            <div class="mb-6">
+              <button *ngIf="buttonlength() < maxButtons" (click)="addButton()"
+                class="px-4 py-2 bg-green-500 text-white rounded-md shadow-md hover:bg-green-600">
+                Add Button
+              </button>
+              <p *ngIf="buttonlength() >= maxButtons" class="text-sm text-gray-500">
+                Maximum {{ maxButtons }} buttons allowed.
+              </p>
+            </div>
+  
+            <!-- Button List with Input for Naming (Flex Layout) -->
+            <div *ngFor="let key of template['buttons'] |keyvalue; trackBy: trackByFn" class="flex items-center gap-4 mb-4">
+              <!-- Input for Button Name -->
+              <input type="text" [(ngModel)]="template['buttons'][key.key]" placeholder="Enter button name..."
+                class="p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 w-full">
+  
+              <!-- Remove Button -->
+              <button (click)="removeButton(key.key)"
+                class="px-4 py-2 bg-red-500 text-white rounded-md shadow-md hover:bg-red-600">
+                Remove
+              </button>
+            </div>
+          </div>
+  
+          <button (click)="saveMessage()"
+            class="w-full py-2 bg-blue-500 text-white font-medium rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 mt-4">
+            update Message
+          </button>
+        </div>
+  
+        <!-- Right Side: Message Preview (2/5 width) -->
+        <div
+          class="col-span-1 md:col-span-1 lg:col-span-2 p-6 rounded-lg shadow-lg sticky top-6 max-h-[80vh] overflow-auto">
+          <h3 class="text-2xl font-medium text-gray-700 mb-6 text-center">
+            Message Preview
+          </h3>
+  
+          <!-- Message Card -->
+          <div
+            *ngIf="template['description'].trim().length > 0 || template['title'].trim().length > 0 || template['footer'].trim().length > 0; else placeholder"
+            class="bg-gradient-to-r from-purple-600 via-pink-500 to-yellow-400 text-transparent bg-clip-text p-6 rounded-md shadow-lg space-y-4 max-h-96 overflow-auto">
+            <!-- Title -->
+            <div *ngIf="template['title'].trim().length > 0" class="text-lg font-semibold break-words overflow-hidden"
+              [innerHTML]="template['title']">
+            </div>
+  
+            <!-- Message -->
+            <p class="text-base whitespace-pre-wrap break-words overflow-hidden" [innerHTML]="descriptionshow">
+            </p>
+  
+            <!-- Footer -->
+            <div *ngIf="template['footer'].trim().length > 0" class="text-sm text-gray-500 mt-2 break-words overflow-hidden"
+              [innerHTML]="template['footer']">
+            </div>
+          </div>
+  
+          <!-- Button Preview -->
+          <div class="flex space-x-4 mt-6">
+            <div *ngFor="let key of template['buttons']|keyvalue; trackBy: trackByFn" class="flex flex-1 items-center gap-4 mb-4">
+  
+              <!-- Button Preview with Flex Layout -->
+              <button
+                class="flex flex-1 items-center justify-center px-6 py-3 bg-white text-transparent bg-clip-text bg-gradient-to-r from-purple-600 via-pink-500 to-yellow-400 rounded-lg shadow-md hover:scale-105 transform transition-all duration-300 ease-in-out">
+                {{ template['buttons'][key.key] || 'Button' }}
+              </button>
+            </div>
+          </div>
+  
+          <!-- Placeholder -->
+          <ng-template #placeholder>
+            <div class="text-gray-400 text-sm italic text-center bg-gray-100 p-4 rounded-md">
+              Your message will appear here...
+            </div>
+          </ng-template>
+  
+        </div>
+  
+      </div>
+    </div>
+  </div>

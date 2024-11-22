@@ -105,10 +105,15 @@
           class="w-full py-2 bg-indigo-500 text-white font-medium rounded-md hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500">
           Reset Form
         </button>
+        <button (click)="saveMessage()"
+          class="w-full py-2 bg-blue-500 text-white font-medium rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 mt-4">
+          created Message
+        </button>
       </div>
 
       <!-- Right Side: Message Preview (2/5 width) -->
-      <div class="col-span-1 md:col-span-1 lg:col-span-2 p-6 rounded-lg shadow-lg sticky top-6 max-h-[80vh] overflow-auto">
+      <div
+        class="col-span-1 md:col-span-1 lg:col-span-2 p-6 rounded-lg shadow-lg sticky top-6 max-h-[80vh] overflow-auto">
         <h3 class="text-2xl font-medium text-gray-700 mb-6 text-center">
           Message Preview
         </h3>
@@ -139,7 +144,7 @@
             <!-- Button Preview with Flex Layout -->
             <button
               class="flex flex-1 items-center justify-center px-6 py-3 bg-white text-transparent bg-clip-text bg-gradient-to-r from-purple-600 via-pink-500 to-yellow-400 rounded-lg shadow-md hover:scale-105 transform transition-all duration-300 ease-in-out">
-              {{ buttons[key.key] || 'Unnamed Button' }}
+              {{ buttons[key.key] || 'Button' }}
             </button>
           </div>
         </div>
