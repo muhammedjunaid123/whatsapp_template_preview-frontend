@@ -1,15 +1,15 @@
-<div class="min-h-screen flex items-center justify-center bg-gradient-to-r from-indigo-500 to-blue-500 p-6">
-  <div class="w-full max-w-4xl bg-white rounded-lg shadow-lg p-8">
+<div class="min-h-screen flex items-center justify-center p-6">
+  <div class="w-full max-w-7xl bg-white rounded-lg shadow-lg p-4">
 
     <!-- Header -->
     <h2 class="text-3xl font-semibold text-gray-800 text-center mb-6">
       Compose & Preview Message
     </h2>
 
-    <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 gap-8">
+    <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-8">
 
-      <!-- Left Side: Input Form -->
-      <div class="bg-white p-6 rounded-lg shadow-lg">
+      <!-- Left Side: Input Form (3/5 width) -->
+      <div class="col-span-1 md:col-span-2 lg:col-span-3 p-6 rounded-lg shadow-lg overflow-auto">
         <h3 class="text-2xl font-medium text-gray-700 mb-6">
           Compose Your Message
         </h3>
@@ -45,8 +45,6 @@
 
         <!-- Add Variable UI -->
         <div class="mt-6">
-
-
           <!-- Editable Variables -->
           <div class="space-y-4" *ngIf="Variables">
             <h4 class="text-lg font-medium text-gray-700 mb-4">Variables</h4>
@@ -59,7 +57,7 @@
               <input #Variableval
                 class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 placeholder="Enter value..." [maxlength]="50" [(ngModel)]="Variables[key.key]"
-                (keyup)="formateVariables(Variableval.value)" />
+                (keyup)="formateVariables()" />
               <div class="text-sm text-gray-500 mt-1">{{ 50 - key.value.length}} characters remaining</div>
             </div>
           </div>
@@ -74,6 +72,34 @@
           <div class="text-sm text-gray-500 mt-1">{{ 50 - footerval.value.length }} characters remaining</div>
         </div>
 
+        <div class="mt-8">
+          <h3 class="text-2xl font-medium text-gray-700 mb-6 text-center">Manage Buttons</h3>
+
+          <!-- Add Button Section -->
+          <div class="mb-6">
+            <button *ngIf="buttonlength() < maxButtons" (click)="addButton()"
+              class="px-4 py-2 bg-green-500 text-white rounded-md shadow-md hover:bg-green-600">
+              Add Button
+            </button>
+            <p *ngIf="buttonlength() >= maxButtons" class="text-sm text-gray-500">
+              Maximum {{ maxButtons }} buttons allowed.
+            </p>
+          </div>
+
+          <!-- Button List with Input for Naming (Flex Layout) -->
+          <div *ngFor="let key of buttons|keyvalue; trackBy: trackByFn" class="flex items-center gap-4 mb-4">
+            <!-- Input for Button Name -->
+            <input type="text" [(ngModel)]="buttons[key.key]" placeholder="Enter button name..."
+              class="p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 w-full">
+
+            <!-- Remove Button -->
+            <button (click)="removeButton(key.key)"
+              class="px-4 py-2 bg-red-500 text-white rounded-md shadow-md hover:bg-red-600">
+              Remove
+            </button>
+          </div>
+        </div>
+
         <!-- Reset Button -->
         <button (click)="resetForm()"
           class="w-full py-2 bg-indigo-500 text-white font-medium rounded-md hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500">
@@ -81,8 +107,8 @@
         </button>
       </div>
 
-      <!-- Right Side: Message Preview -->
-      <div class="bg-white p-6 rounded-lg shadow-lg">
+      <!-- Right Side: Message Preview (2/5 width) -->
+      <div class="col-span-1 md:col-span-1 lg:col-span-2 p-6 rounded-lg shadow-lg sticky top-6 max-h-[80vh] overflow-auto">
         <h3 class="text-2xl font-medium text-gray-700 mb-6 text-center">
           Message Preview
         </h3>
@@ -90,20 +116,31 @@
         <!-- Message Card -->
         <div
           *ngIf="description.trim().length > 0 || title.trim().length > 0 || footer.trim().length > 0; else placeholder"
-          class="bg-gradient-to-r from-blue-100 to-indigo-100 text-gray-800 p-6 rounded-md shadow-md space-y-4 max-h-96 overflow-auto">
+          class="bg-gradient-to-r from-purple-600 via-pink-500 to-yellow-400 text-transparent bg-clip-text p-6 rounded-md shadow-lg space-y-4 max-h-96 overflow-auto">
           <!-- Title -->
-          <div *ngIf="title.trim().length > 0" class="text-lg font-semibold text-gray-800 break-words overflow-hidden"
+          <div *ngIf="title.trim().length > 0" class="text-lg font-semibold break-words overflow-hidden"
             [innerHTML]="title">
           </div>
 
           <!-- Message -->
-          <p class="text-base text-gray-800 whitespace-pre-wrap break-words overflow-hidden"
-            [innerHTML]="descriptionshow">
+          <p class="text-base whitespace-pre-wrap break-words overflow-hidden" [innerHTML]="descriptionshow">
           </p>
 
           <!-- Footer -->
           <div *ngIf="footer.trim().length > 0" class="text-sm text-gray-500 mt-2 break-words overflow-hidden"
             [innerHTML]="footer">
+          </div>
+        </div>
+
+        <!-- Button Preview -->
+        <div class="flex space-x-4 mt-6">
+          <div *ngFor="let key of buttons|keyvalue; trackBy: trackByFn" class="flex flex-1 items-center gap-4 mb-4">
+
+            <!-- Button Preview with Flex Layout -->
+            <button
+              class="flex flex-1 items-center justify-center px-6 py-3 bg-white text-transparent bg-clip-text bg-gradient-to-r from-purple-600 via-pink-500 to-yellow-400 rounded-lg shadow-md hover:scale-105 transform transition-all duration-300 ease-in-out">
+              {{ buttons[key.key] || 'Unnamed Button' }}
+            </button>
           </div>
         </div>
 
@@ -113,7 +150,9 @@
             Your message will appear here...
           </div>
         </ng-template>
+
       </div>
+
     </div>
   </div>
 </div>
