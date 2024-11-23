@@ -47,7 +47,7 @@ export class CreateTemplateComponent {
     if (selected === '') {
       return;
     }
-    const escapedSelected = this.escapeRegex(selected);
+    const escapedSelected = this.escapeRegex(selected);  
     const regex = new RegExp(`(${escapedSelected})`, 'g');
     this.description = this.description.replace(regex, (match) => {
       if (!match.startsWith('*') || !match.endsWith('*')) {
